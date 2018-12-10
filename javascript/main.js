@@ -113,16 +113,22 @@
 
 // async await // Lam cho code hien thi dong bo nhung ban chat bat dong bo
 
-function callback(result) {
-    console.log(result);
-}
+// function callback(result) {
+//     console.log(result);
+// }
 
-function print(onWaitDone) {
-    let result = 1 + 1;
-    setTimeout (function() {
-        onWaitDone(result);
-    }, 1000);
-}
+// function print(onWaitDone) {
+//     let result = 1 + 1;
+//     setTimeout (function() {
+//         onWaitDone(result);
+//     }, 1000);
+// }
 
-console.log("Start");
-print(callback);
+// console.log("Start");
+// print(callback);
+
+var a = 5
+var target = 3
+if (a != target) {
+    console.log("ok");
+}

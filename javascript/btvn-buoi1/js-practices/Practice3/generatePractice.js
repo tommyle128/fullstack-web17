@@ -51,6 +51,7 @@ function generate(testLengthArray){
         var running = true;
         while (running == true) {
           target = Math.floor(Math.random() * (max - min + 1)) + min;
+          var count = 0;
           for (let t = 0; t < input.length; t++) {
             if (input[t] != target) {
               running = false;
