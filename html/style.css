@@ -1,0 +1,33 @@
+.text-blue {
+    color: blue;
+}
+
+a:hover{
+    color:aqua;
+}
+
+img:hover {
+    transform: scale(2);
+}
+
+p {
+    background-color:blue;
+    background-image:url('');
+    height:100vh; (tinh theo chieu cao cua so trinh duyet: 1vh=5px)
+    background-repeat: no-repeat;
+    background-size:contain;
+    background-position:center;
+    /* border-color:green;
+    border-width: 2px;
+    border-style:dotted; */
+    border: 10px dashed green;
+}
+
+circle {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    overflow: hidden;
+    
+}
+

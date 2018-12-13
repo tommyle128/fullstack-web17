@@ -54,8 +54,11 @@ function generate(testLengthArray){
           var count = 0;
           for (let t = 0; t < input.length; t++) {
             if (input[t] != target) {
-              running = false;
+              count += 1;
             }
+          }
+          if (count == input.length) {
+            running = false;
           }
         }
         removeItem(targetAllTypes, "Not found");

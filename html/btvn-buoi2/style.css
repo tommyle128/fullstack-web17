@@ -1,0 +1,45 @@
+.menu {
+    background-color: #D5B0AC;
+    color: #402E2A;
+    font-weight: bold;
+    text-align: center;
+}
+
+.w-100px{
+    width: 100px;
+}
+
+.h-30px{
+    height: 30px;
+}
+
+.d-inline{
+    display: inline-block;
+    line-height: 30px;    
+}
+
+.d-block{
+    display: block;
+    line-height: 30px;
+}
+
+span:hover{
+    background-color: #9CD08F;
+    color: #FFFFFF;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.mr-5p{
+    margin-right:5%;
+}
+
+.mb-2px{
+    margin-bottom: 2px;
+}
+
+.mt-0{
+    margin-top:0;
+}
