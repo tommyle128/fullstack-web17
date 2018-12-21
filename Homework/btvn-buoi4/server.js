@@ -1,16 +1,22 @@
 const express = require("express");
 const app = express();
+var path = require("path");
 
-app.use(express.static("homepage"));
 app.get("/", (request, response) => {
-    response.send(__dirname + "index.html");
+    console.log(__dirname);
+    response.send("Homepage");
 });
 
-app.get("/about-me", (request, response) =>{
-    response.sendFile(__dirname + "/cv/index.html");
+//Nap du lieu cua thu muc CV:
+app.use(express.static(path.join(__dirname, "cv")));
+// Function chay file index.html trong thu muc CV:
+app.get('/about', function(req, res) {
+    res.sendFile(path.join(__dirname + '/cv/index.html'));
 });
 
 app.listen(1208, (err) => {
     if (err) console.log(err);
     else console.log("Server start success!");
 });
+
+
