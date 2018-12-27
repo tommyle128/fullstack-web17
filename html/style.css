@@ -10,7 +10,7 @@ img:hover {
     transform: scale(2);
 }
 
-p {
+<!--p {
     background-color:blue;
     background-image:url('');
     height:100vh; (tinh theo chieu cao cua so trinh duyet: 1vh=5px)
@@ -21,7 +21,7 @@ p {
     border-width: 2px;
     border-style:dotted; */
     border: 10px dashed green;
-}
+} -->
 
 circle {
     width: 400px;

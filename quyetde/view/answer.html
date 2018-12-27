@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Quyết đê - Answer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+<body>
+    <h1 id="content">Nội dung câu hỏi</h1>
+    <button class="btn-answer" data-questionid="" id="yes">Đúng/Có/Phải</button>
+    <button class="btn-answer" data-questionid="" id="no">Sai/Không/Trái</button>
+    <button>Xem câu hỏi khác</button>
+    <button class="btn-result" data-questionid="">Xem kết quả</button>
+
+    <!--Library luôn để lên trên, code ở phía dưới-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+        $(".btn-answer").click(function() {
+            const vote = $(this).attr("id"); // this là 1 DOM Element
+            const questionId = ($(".btn-answer").attr("data-questionid"));
+            $.ajax({
+                url: "vote/"+ questionId + "/" + vote,
+                type: "GET",
+                success: function(data) {
+                    console.log(data);
+                    // window.location.href = "/"; // cái phần redirect của fuction vote/... trả cho AJAX là data cần thềm câu này để redirect
+                    $.ajax({
+                        url: "question/" + questionId,
+                        type: "GET",
+                        success: function(data) {
+                            localStorage.setItem('myMainKey', questionId);
+                            window.location.href = "question/" + questionId;
+                        },
+                        error: function(err) {
+                            console.log("Error!!!", err);
+                        }
+                    });
+                },
+                error: function(err) {
+                    console.log("Error!!!", err);
+                }
+            });
+        });
+        
+        console.log(window.location);
+
+        $(".btn-result").click(function() {
+            const questionId = ($(".btn-result").attr("data-questionid"));
+            $.ajax({
+                url: "question/" + questionId,
+                type: "GET",
+                success: function(data) {
+                    localStorage.setItem('myMainKey', questionId);
+                    window.location.href = "question/" + questionId;
+                },
+                error: function(err) {
+                    console.log("Error!!!", err);
+                }
+            });
+        });
+
+        $.ajax({
+            url: "/api/random", // gốc là như thế này: "http://localhost:6969/api/random"
+            type: "GET", // browser chỉ có method là get
+            success: function(data) {
+                console.log(data.question);
+                $("#content").text(data.question.content);
+                $(".btn-answer").attr("data-questionid", data.question.id);
+                $(".btn-result").attr("data-questionid", data.question.id);
+            },
+            error: function(err) {
+                console.log("Error!!!", err);
+            }
+        });
+    </script>
+</body>
+</html>

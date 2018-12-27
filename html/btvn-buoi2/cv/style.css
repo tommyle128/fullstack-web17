@@ -1,0 +1,72 @@
+.profile-img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.col-2{
+    display: flex;
+}
+
+.left-col{
+    display: flex;
+    background-color: #6890dd;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.mtop-20px{
+    margin-top: 20px;
+}
+
+.mleft-20px{
+    margin-left:20px;
+}
+
+
+.center {
+    justify-content: center;
+}
+
+.w-250px{
+    width: 250px;
+}
+
+.right-col{
+    display: flex;
+    background-color:#d4d4d6;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.line-2px{
+    background-color: blue;
+    height:2px;
+}
+
+.font{
+    font-family: 'Roboto';
+    color: #477fed;
+    font-weight: bold;
+}
+
+.font2{
+    font-family: 'Open Sans';
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.font-my-name{
+    font-family: roboto;
+    color: white;
+    font-weight: 2000px;
+}
+
+.space-between{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

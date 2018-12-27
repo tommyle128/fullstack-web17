@@ -12,12 +12,20 @@
 <body class="mt-0">
     <!--Part 1. Horizontal Menu-->
     <nav class="menu">
-        <span class="w-100px h-30px d-inline hover pointer mr-5p">Item 1</span>
+        <span class="w-100px h-30px d-inline hover pointer mr-5p">Item 1
+            <nav class="w-100px">
+                <span class="menu w-100px h-30px hover d-block pointer mb-2px">Item 1</span>
+                <span class="menu w-100px h-30px hover d-block pointer mb-2px">Item 2</span>
+                <span class="menu w-100px h-30px hover d-block pointer mb-2px">Item 3</span>
+                <span class="menu w-100px h-30px hover d-block pointer">Item 4</span>
+            </nav>
+        </span>
+
         <span class="w-100px h-30px d-inline hover pointer mr-5p">Item 2</span>
         <span class="w-100px h-30px d-inline hover pointer mr-5p">Item 3</span>
         <span class="w-100px h-30px d-inline hover pointer">Item 4</span>
     </nav>
-
+    
     <br>
 
     <!--Part 2. Vertical Menu-->
