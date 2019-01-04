@@ -11,21 +11,33 @@
 <body>
     <div class="style1">
         <h1 id="content">Nội dung câu hỏi</h1>
-        <h2 id="total-votes"></h2>
+        <h2 id="total-votes">Total Votes</h2>
     </div>
-    Yes: <p id="result-yes" class=""></p>
-    No: <p id="result-no" class=""></p>
+    <div>Yes: <p id="result-yes" class=""></p></div> 
+    <div>No: <p id="result-no" class=""></p></div>
+    <button><a href="/">Xem kết quả</a></button>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script>
-        var questionId = localStorage.getItem('myMainKey');
+        const questionId = window.location.pathname.replace("/question/", "")
+        // Cach so 1 de tach pathname
+        // var questionId = localStorage.getItem('myMainKey'); // Day la cach so 2
         $.ajax({
-            url: "/api/result/" + questionId , 
+            url: "/api/question/" + questionId, 
             type: "GET", 
             success: function(data) {
-                $("#content").text(data.questionContent);
-                $("#total-votes").text(data.totalVotes + " Votes");
-                $("#result-yes").text(data.yesPercentage + "%");
-                $("#result-no").text(data.noPercentage + "%");
+                // $("#content").text(data.questionContent);
+                // $("#total-votes").text(data.totalVotes + " Votes");
+                // $("#result-yes").text(data.yesPercentage);
+                // $("#result-no").text(data.noPercentage);
+                console.log(data.question);
+                const { question } = data; // giống với: const question = data.question;
+                const total = question.yes + question.no;
+                $("#content").text(question.content);
+                $("#total-votes").text(total + "votes");
+                $("#result-yes").text(question.yes*100/total).toFixed(2);
+                $("#result-no").text(question.no*100/total).toFixed(2);
+                
             },
             error: function(err) {
                 console.log("Error!!!", err);

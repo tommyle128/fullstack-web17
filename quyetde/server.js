@@ -2,7 +2,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs"); // fs la file system
 const app = express(); // app chinh la web server cua minh
-var path = require("path");
+const mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost:27017/quyetde-17", {useNewUrlParser: true}, (err) =>{
+    if (err) console.log("DB connect fails!", err)
+    else console.log("DB successful connect!");
+});
+
+const QuestionModel = require("./models/questionModel"); // Không cần phải .js vì nó là file js rồi
 
 
 //request co method GET toi duong dan: http://localhost:6969/
@@ -24,35 +31,56 @@ app.get("/", (req, res) => {  // 1 request tra ve 1 response
 });
 
 app.get("/api/random", (req, res) => {
-    const questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
-    const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-    res.send({ question: randomQuestion });
+    // const questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
+    // const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+    // res.send({ question: randomQuestion });
+
+   // function(err, questions) {} tương đương (err, questions) => {}
+    // QuestionModel.find({}, (err, questions) => { // Lấy ra tất cả object từ QuestionModel
+    //     if (err) console.log(err)
+    //     else {
+    //         console.log(questions);
+    //         const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+    //         res.send({ question: randomQuestion });
+    //     }
+    // });
+
+    QuestionModel.count({}, (err, totalQuestion) => { // Đếm tổng số câu hỏi
+        QuestionModel
+            .findOne({}) // có thể nhét callback ở đây
+            .skip(Math.floor(Math.random() * totalQuestion)) // Skip 0 là lấy thằng đầu tiên, skip n là lấy thằng n+1
+            .exec((err, randomQuestion) => {  // Nếu dùng skip muốn lấy question tìm được phải dùng exec để nhét callback vào
+                if (err) console.log(err)
+                else res.send ({ question: randomQuestion });
+            });
+        });
 });
 
-app.get("/api/result/:questionId", (req, res) => {
+app.get("/api/question/:questionId", (req, res) => {
     const questionId = req.params.questionId;
-    let questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
-    questions.forEach((question, index) => {
-        if(question.id == questionId) {
-            questionContent = question.content;
-            totalVotes = questions[index].yes + questions[index].no;
-            if (totalVotes != 0) {
-                yesPercentage = ((questions[index].yes / totalVotes)*100).toFixed(2);
-                noPercentage = (100 - yesPercentage).toFixed(2);
-            } else {
-                yesPercentage = 50;
-                noPercentage = 50;
-            }
+    // let questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
+    // questions.forEach((question, index) => {
+        // if(question.id == questionId) {
+        //     questionContent = question.content;
+        //     totalVotes = questions[index].yes + questions[index].no;
+        //     if (totalVotes != 0) {
+        //         yesPercentage = ((questions[index].yes / totalVotes)*100).toFixed(2);
+        //         noPercentage = (100 - yesPercentage).toFixed(2);
+        //     } else {
+        //         yesPercentage = 50;
+        //         noPercentage = 50;
+        //     }
+        // };
+        if (question.id == questionId) {
+            questionFound = question;
         };
-    });
-    // console.log(totalVotes);
-    // console.log(yesPercentage);
-    // console.log(noPercentage);
-    res.send ({ questionContent: questionContent,
-                totalVotes: totalVotes,
-                yesPercentage: yesPercentage,
-                noPercentage: noPercentage
-    });
+        res.send({ question: questionFound });
+    // });
+    //     res.send ({ questionContent: questionContent,
+    //             totalVotes: totalVotes,
+    //             yesPercentage: yesPercentage,
+    //             noPercentage: noPercentage
+    // });
 });
 
 {/* <form method="POST" action="vote/${randomQuestion.id}">
@@ -69,18 +97,28 @@ app.get("/ask", (req, res) => {
 app.use(bodyParser.urlencoded({ extended: false})); // Library dung dau tien de don duoc cac thu dang toi
 
 app.post("/addquestion", (req, res)  => {
-    const questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
-    console.log(questions);
-    const newQuestion = {
-        content: req.body.questionContent,
-        yes: 0,
-        no: 0,
-        id: questions.length
-    };
-    questions.push(newQuestion);
-    console.log(questions);
-    fs.writeFileSync("./questions.json", JSON.stringify(questions));
-    res.redirect("/");
+    // const questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
+    // console.log(questions);
+    // const newQuestion = {
+    //     content: req.body.questionContent,
+    //     yes: 0,
+    //     no: 0,
+    //     id: questions.length
+    // };
+    // questions.push(newQuestion);
+    // console.log(questions);
+    // fs.writeFileSync("./questions.json", JSON.stringify(questions));
+
+    QuestionModel.create(
+        {
+            content: req.body.questionContent
+        },
+        (err, questionCreated) => {
+            if (err) console.log(err)
+            else res.redirect("/");
+        }
+    );
+    
 });
 
 // app.post("/vote/:id", (req, res, next) => {
@@ -130,19 +168,29 @@ app.post("/addquestion", (req, res)  => {
 app.get("/vote/:questionId/:vote", (req, res) => {
     const questionId = req.params.questionId;
     const vote = req.params.vote;
-    let questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
-    questions.forEach((question, index) => {  // vong forEach ((item, index, arr) => {} )
-        if(question.id == questionId) {
-            // if (vote == "yes") questions[index].yes += 1
-            // else questions[index].no += 1;
+    QuestionModel.find({}, (err, questions) => { // Lấy ra tất cả object từ QuestionModel
+        if (err) console.log(err)
+        else {
+            console.log(questions);
+            
 
-            questions[index][vote] += 1; // nó sẽ lấy đúng questions[index]["yes"] hoặc questions[index]["no"]
-        }
+        };
     });
-    fs.writeFileSync("./questions.json", JSON.stringify(questions));
-    res.redirect("/");
-});
+    
+    // let questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
+    // questions.forEach((question, index) => {  // vong forEach ((item, index, arr) => {} )
+    //     if(question.id == questionId) {
+    //         // if (vote == "yes") questions[index].yes += 1
+    //         // else questions[index].no += 1;
 
+    //         questions[index][vote] += 1; // nó sẽ lấy đúng questions[index]["yes"] hoặc questions[index]["no"]
+    //     }
+    // });
+    // fs.writeFileSync("./questions.json", JSON.stringify(questions));
+    // res.redirect("/");
+
+    
+});
 
 app.get("/question/:questionId", (req, res) => {
     res.sendFile(__dirname + "/view/question.html");
