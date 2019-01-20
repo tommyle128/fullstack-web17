@@ -68,8 +68,8 @@
             success: function(data) {
                 console.log(data.question);
                 $("#content").text(data.question.content);
-                $(".btn-answer").attr("data-questionid", data.question.id);
-                // $(".btn-result").attr("data-questionid", data.question.id);
+                $(".btn-answer").attr("data-questionid", data.question._id);
+                $(".btn-result").attr("data-questionid", data.question._id);
             },
             error: function(err) {
                 console.log("Error!!!", err);

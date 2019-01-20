@@ -45,7 +45,7 @@ app.get("/api/random", (req, res) => {
     //     }
     // });
 
-    QuestionModel.count({}, (err, totalQuestion) => { // Đếm tổng số câu hỏi
+    QuestionModel.countDocuments({}, (err, totalQuestion) => { // Đếm tổng số câu hỏi (hàm Count thì sẽ bị warning và remove trong tương lai)
         QuestionModel
             .findOne({}) // có thể nhét callback ở đây
             .skip(Math.floor(Math.random() * totalQuestion)) // Skip 0 là lấy thằng đầu tiên, skip n là lấy thằng n+1
@@ -54,7 +54,7 @@ app.get("/api/random", (req, res) => {
                 else res.send ({ question: randomQuestion });
             });
         });
-});
+    });
 
 app.get("/api/question/:questionId", (req, res) => {
     const questionId = req.params.questionId;
@@ -71,16 +71,23 @@ app.get("/api/question/:questionId", (req, res) => {
         //         noPercentage = 50;
         //     }
         // };
-        if (question.id == questionId) {
-            questionFound = question;
-        };
-        res.send({ question: questionFound });
+        // if (question.id == questionId) {
+        //     questionFound = question;
+        // };
+        // res.send({ question: questionFound });
     // });
     //     res.send ({ questionContent: questionContent,
     //             totalVotes: totalVotes,
     //             yesPercentage: yesPercentage,
     //             noPercentage: noPercentage
     // });
+    QuestionModel.findOne({ _id: questionId }, function (err, questionFound) {
+        if (err) console.log (err)
+        else if (!questionFound || questionFound._id) res.status(404).send({ message: "Question not found"})
+        else res.send ({ question: questionFound });
+    });
+
+    //QuestionModel.findById(questionId, fucntion(err, questionFound) {});
 });
 
 {/* <form method="POST" action="vote/${randomQuestion.id}">
@@ -168,15 +175,7 @@ app.post("/addquestion", (req, res)  => {
 app.get("/vote/:questionId/:vote", (req, res) => {
     const questionId = req.params.questionId;
     const vote = req.params.vote;
-    QuestionModel.find({}, (err, questions) => { // Lấy ra tất cả object từ QuestionModel
-        if (err) console.log(err)
-        else {
-            console.log(questions);
-            
-
-        };
-    });
-    
+      
     // let questions = JSON.parse(fs.readFileSync("./questions.json", { encoding: "utf-8"}));
     // questions.forEach((question, index) => {  // vong forEach ((item, index, arr) => {} )
     //     if(question.id == questionId) {
@@ -186,10 +185,28 @@ app.get("/vote/:questionId/:vote", (req, res) => {
     //         questions[index][vote] += 1; // nó sẽ lấy đúng questions[index]["yes"] hoặc questions[index]["no"]
     //     }
     // });
-    // fs.writeFileSync("./questions.json", JSON.stringify(questions));
-    // res.redirect("/");
-
+    // fs.writeFileSync("./questions.json", JSON.stringify(questions)); 
     
+    // QuestionModel.findOneAndUpdate(
+    //     { _id: questionId }, 
+    //     { $inc: { [vote]: 1 } }, // inc là tăng 1 khoảng ở bên cạnh. VD này là mỗi lần tăng 1
+    //     function(er, questionUpdated) {
+    //         if (err) console.log(err);
+    //         else res.redirect("/");
+    //     });
+
+    QuestionModel.findOne({ _id: questionId}, function(err, questionFound) {
+        if (err) console.log(err)
+        else if (!questionFound || !questionFound._id) res.status(404).send({ message: "Question Not Found"})
+        else {
+            questionFound[vote] += 1;
+            questionFound.save(function(err)     { // Cho những cái phức tạp thì code như thế này
+                if (err) console.log(err)
+                else res.send({ message: "Success" });
+            });
+        }
+    });
+       
 });
 
 app.get("/question/:questionId", (req, res) => {
