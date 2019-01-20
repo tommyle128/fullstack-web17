@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Udemy Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/core.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    
+    
+</head>
+<body>
+    <!--
+    <div>
+        <img src="https://www.udemy.com/staticx/udemy/images/v6/logo-coral.svg" alt="Udemy Logo" class="text-center logo">
+    </div>
+    <div>
+    <nav class="navbar navbar-light bg-light">
+        <form class="form-inline text-center" id="udemy">
+          <input class="form-control mr-xl-2" type="search submit" placeholder="Search" aria-label="Search" id="content">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search-button">Search</button>
+        </form>
+      </nav>
+    </div>
+    <div class="" id='select'>
+        <span class="mt-2" >Price: </span>
+        <select class="form-control btn btn-success" id="price">
+            <option value=""></option>
+            <option value="paid">Paid</option>
+            <option value="free">Free</option>
+        </select>            
+    </div>
+    <div class="container">
+        <div class="row result">
+
+        </div>
+        
+    </div>
+    -->
+
+    <div class="container text-center">
+        <form id="searchCourse">
+            <div class="form-group">
+                <input required id="keyword" type="text" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-danger">Tìm kiếm</button>
+        </form>
+        <div id="results">
+
+        </div>
+        
+    </div>
+    <div class="text-center id="loading">
+            <div class="lds-roller"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </div>
+    
+   
+    <script src="main.js"></script>
+
+    <!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#udemy").on("submit", function() {
+                    event.preventDefault();
+                    let content = $("#content").val();
+                    $.ajax({
+                    url: `http://api.techkids.vn/udemy/courses?search=${content}&page=1&page_size=12`, 
+                    type: "GET", 
+                    success: function(data) {
+                        console.log(data.results);
+                        for (i = 0; i < 12; i++) {
+                            $(".result").append(`
+                                <div class="col-4">
+                                    <div class="card">
+                                        <h2><img class="card-img-top" src="${data.results[i].image_240x135}" alt="Card image cap"></h2>
+                                        <div class="card-body">
+                                            <h5 class="card-title">${data.results[i].title}</h5>
+                                            <p class="card-text">- Price: ${data.results[i].price}</p>
+                                            <p class="card-text">- Score: ${data.results[i].relevancy_score}</p>
+                                            <a href="${"https://www.udemy.com" + data.results[i].url}" class="btn btn-primary">Go to this course</a>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+                               
+                                `
+                            );
+                    },
+                    error: function(err) {
+                        console.log("Error!!!", err);
+                    }
+                }); 
+            });
+
+            $
+        });
+        
+    </script>-->  
+</body>
+</html>
