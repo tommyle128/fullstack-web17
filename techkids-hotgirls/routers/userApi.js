@@ -1,5 +1,7 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const UserApi = express.Router();
+
 const UserModel = require('../models/userModel')
 
 //Middleware
@@ -48,7 +50,9 @@ UserApi.get('/:userId', (req, res) => {
 // create user
 UserApi.post('/', (req, res) => {
     const { username, password, avatar } = req.body;
-    const newUsers = { username, password, avatar };
+    const salt = bcrypt.genSaltSync(20); // default la 10, tieu chuan la 12
+    const hashPassword = bcrypt.hashSync(password, salt);
+    const newUsers = { username, password: hashPassword, avatar };
     UserModel.init()
         .then(() => {
             return UserModel.create(newUsers);

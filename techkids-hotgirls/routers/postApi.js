@@ -15,13 +15,12 @@ PostApi.get('/', (req, res) => {
     const { page=1, per_page=5 } = req.query;
     
     PostModel.find({})
-        // .select({
-        //     password: 1,
-        //     __v: 1 // 1 là chọn, 0 là bỏ không hiện
-        // })
+        .populate('author', '-_id -password -__v') // Loại bỏ _id, password và __v
+        //.populate('author', { _id:0, password: 0, __v: 0}) // Cách thứ 2 loại bỏ _id, password, __V
+        .populate('comments.author', '-_id -password -__v')
         .select('-password -__v')
-        .skip((page-1)*Number(per_page)) // bỏ qua số bản ghi tính từ đầu
-        .limit(Number(per_page)) // lấy số bản ghi tính từ cái hết bỏ qua
+        .skip((page-1)*Number(per_page)) 
+        .limit(Number(per_page)) 
         .then((posts) => {
             res.send ({ data: posts });
         })
@@ -41,12 +40,12 @@ PostApi.get('/:postId', (req, res) => {
     .catch((error) => {
         res.send( { error });
     });
-});ê
+});
                                        
 // create post
-PostApi.post('/:userId', (req, res) => {
-    const { picture, description, like, title, comments, view, date, author } = req.body;
-    const newPost = { picture, description, like, title, comments, view, date, author };
+PostApi.post('/', (req, res) => {
+    const { picture, description, like, title, comments, view, author } = req.body;
+    const newPost = { picture, description, like, title, comments, view, author };
     PostModel.init()
         .then(() => {
             return PostModel.create(newPost);
@@ -58,31 +57,34 @@ PostApi.post('/:userId', (req, res) => {
             res.send( { error });
         });
     });
-});
+
 
 
 // update post
 PostApi.put('/:postId', (req, res) => {
     const { postId } = req.params;
-    const { password, avatar } = req.body;
-    PostModel.findById(PostId)
+    const { like, title, comments, view, date, author } = req.body;
+    PostModel.findById(postId)
     .then((postFound) => {
         if(!postFound) res.send ({ error: "User does not exist!" })
         else {
-            if(password) postFound.password = password;
-            if(avatar) postFound.avatar = avatar;
-            if(description) postFound.description = description;
-            if(like) postFound.like = like;
-            if(title) postFound.title = title;
-            if(comments) postFound.comments = comments;
-            if(view) postFound.view = view;
-            if(date) postFound.date = date;
-            if(author) postFound.author = author;
-            return postFound.save();
+            try {
+                if(picture) postFound.picture = picture;
+                if(description) postFound.description = description;
+                if(like) postFound.like = like;
+                if(title) postFound.title = title;
+                if(comments) postFound.comments = comments;
+                if(view) postFound.view = view;
+                if(date) postFound.date = date;
+                if(author) postFound.author = author;
+                return postFound.save();
+            } catch (error) {
+                console.log(error)
+            }
         }
     })
     .then ((postUpdated) => {
-        res.send({ data: userUpdated });
+        res.send({ data: postUpdated });
     })
     .catch((error) => {
         res.send( { error });
